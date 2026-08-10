@@ -1,0 +1,43 @@
+{
+  "id": "eval-02-patient-call-logging",
+  "mode": "New Feature",
+  "skill": "healthcloud-delivery-architect",
+  "description": "Care Coordinator logs an inbound patient call and routes to the covering care-team member. Classic Patient Services scenario for a med-device company (Insulet OmniPod pattern).",
+  "prompt": "Architect HC Story: Care Coordinators need a better way to log and route patient calls for the OmniPod adherence program. Every inbound call should capture category (Clinical Question, Refill, Device Issue, Adherence Support, Billing), auto-route by category, screen for adverse-event/product-complaint content, and start an SLA clock.",
+  "context": {
+    "files_present": [
+      "requirements/HC_PatientServices_Foundation.md"
+    ],
+    "prior_stories": []
+  },
+  "rubric": {
+    "hard_blockers": [
+      "Persona is 'Care Coordinator' or 'Patient Services Representative' — NOT 'Patient', NOT 'user'",
+      "Every AC uses Pattern A/B/C/D/E",
+      "Pattern A ACs contain NO Apex class names, IP steps, SOQL, or *__c API names",
+      "One Pattern A AC per intake channel or edge case (happy path + AE fan-out + no-owner fallback)",
+      "Pattern E block covers Case + ContactEncounter (+ Task if follow-up flagged) with every field enumerated for the happy-path branch",
+      "AE fan-out has its OWN Pattern E block (different branch)",
+      "PHI audit AC present (RULE 16) — patient identifying info displayed",
+      "Field-level security / permission set spec (Pattern C) for HC_CareCoordinator, HC_NurseCaseManager, HC_PrivacyOfficer",
+      "Technical Implementation section present, cross-references AC numbers",
+      "Build-technology decision in header — Screen Flow first, NOT OmniScript by default (call this out explicitly)",
+      "Estimated Effort table with per-component sizing"
+    ],
+    "quality_checks": [
+      "Uses standard Case with a Patient Services record type — no custom PatientCall__c object",
+      "Uses standard ContactEncounter for the call event, not a custom object",
+      "AE fan-out creates a parallel Case (with PV record type) via Record-Triggered Flow, and locks the original Case from Care Coordinator profile",
+      "SLA start time captured as a datetime field on Case with a Path stage transition",
+      "OmniPod device-help scenario mentioned in scope but doesn't force a custom device-support object",
+      "Clarification Questions table calls out: (a) which telephony platform (Service Cloud Voice / Amazon Connect / Genesys), (b) PV escalation target (in-org Case queue vs external Argus/Vault Safety), (c) NCM roster source"
+    ]
+  },
+  "red_flags_auto_fail": [
+    "Persona is 'As a Patient' — this is an internal feature",
+    "OmniScript proposed without a rejected-alternative note explaining why Screen Flow won't work",
+    "Missing Pattern E on save",
+    "Missing PHI audit AC (RULE 16 blocker)",
+    "Prototype produced without Build-Technology banner"
+  ]
+}

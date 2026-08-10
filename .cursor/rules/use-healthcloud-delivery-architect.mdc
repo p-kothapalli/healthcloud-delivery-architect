@@ -1,0 +1,79 @@
+# Always use the Health Cloud Delivery Architect for Health Cloud work
+
+Whenever the user asks to **create, write, draft, plan, refactor, break down,
+migrate, or prototype** a solution, user story, requirement, build spec,
+technical specification, epic, or product-owner-facing mockup for **Salesforce
+Health Cloud**, you MUST first read and follow the skill at
+`.cursor/skills/healthcloud-delivery-architect/SKILL.md` (the "Health Cloud
+Delivery Architect"), and author the output using its contract.
+
+## Triggers (non-exhaustive)
+
+- "create/write/draft a user story", "story for …", "US-…", "acceptance criteria"
+- "break down this into stories", "epic", "decompose the spec"
+- "refactor story", "bug fix story", "build spec", "implementation plan"
+- **Plan + Prototype (no stories yet):** "plan and prototype", "plan + prototype",
+  "plan only", "just a plan", "solution plan", "prototype only", "prototype first",
+  "no stories yet", "not ready for stories"
+- **Salesforce-grounded HTML prototype**, "clickable prototype", "clickable mockup",
+  "PO mockup", "walkthrough for the product owner"
+- **Health-Cloud-specific:** Care Plans / Care Programs / Care Teams,
+  Patient Services & contact center, Utilization Management (prior
+  authorization, service reviews, appeals via `CareRequest` /
+  `CareRequestReview`), referral management, Provider Network Ops
+  (`HealthcareProvider` / `HealthcareFacility` / roster ingestion),
+  Member 360 (payer enrollment / benefits / claims), Home Health / Remote
+  Patient Monitoring (RPM), HL7 v2 / FHIR R4 / EHR integration, patient
+  enrollment, adherence coaching, device-support case management (OmniPod
+  and similar), consent-driven outbound communications, and **legacy →
+  Health Cloud migrations** (Salesforce Care Cloud legacy, custom
+  Force.com patient-services, third-party CRM).
+
+## Non-negotiables from the skill (hard blockers)
+
+- **Concrete business persona** — never "user"/"business user"/"developer". Use the
+  Health Cloud role (e.g., Care Coordinator, Care Manager, Nurse Case Manager,
+  Patient Services Representative, Utilization Reviewer, Medical Director,
+  Network Manager, RPM Nurse). Patients / Caregivers / HealthcareProviders /
+  HealthcareFacilities are the *subjects* of the interaction, not the login
+  persona (unless the story is genuinely for an Experience Cloud portal user).
+- **Given / When / Then in business language** (Pattern A) for behavioural ACs — no
+  Apex class names, IP versions/step numbers, SOQL, or API field names inside the AC.
+  *(Skipped only in Plan + Prototype mode, which produces no ACs.)*
+- **`## Technical Implementation (high-level)`** section after the ACs (all
+  implementation detail lives here, not in the ACs).
+- **Pattern E per-object field spec** on every "records created/updated" outcome —
+  every field enumerated, no "etc.".
+- **Declarative-first build-technology decision** (RULE 7a) — prefer OOTB Lightning
+  + Dynamic Actions / Screen Flow / Field Sets before OmniScript; OmniStudio is
+  one option, not the default.
+- **PHI / HIPAA awareness** (RULE 16) — every story that displays, logs, exports,
+  or sends PHI carries an audit AC (Pattern A) and a field-level-security /
+  permission-set spec (Pattern C).
+- **Grounded HTML prototype rule (§6.7)** — a PO prototype MUST label every element
+  with its Salesforce component (OOTB / Config / Flow / LWC / OmniScript / Apex /
+  Ext). An unlabelled generic web mockup is not acceptable.
+- **Never hallucinate component names** — verify custom components via
+  `code-review-graph` and standard Health Cloud objects/fields via
+  `salesforce-docs` first, and scan `requirements/` for overlapping stories.
+- Include the required sections in canonical order and an **Estimated Effort** table.
+
+## If the MCP is available
+
+If a Health Cloud Delivery Architect MCP server is connected, you may use it.
+If it is unavailable, fall back to the skill file above — do not skip the
+Architect contract.
+
+## Sibling skills — pick the right one
+
+- **This skill (`healthcloud-delivery-architect`)** — Salesforce Health Cloud
+  (payer, provider, patient services, home health, med-device patient support).
+- **`lsc-delivery-architect`** — Salesforce Life Sciences Cloud (pharma
+  commercial + medical field, MSL Medical Inquiry, Sample Management, Managed
+  Events, SAP Concur, Veeva CRM migration).
+- **`user-story-architect`** — Provider Network Management (PNM) /
+  credentialing (`PRM_` conventions).
+
+If the request is genuinely cross-vertical (e.g. a diabetes device company
+that runs both LSC for commercial field and Health Cloud for patient services),
+route to whichever cloud the specific story belongs to.

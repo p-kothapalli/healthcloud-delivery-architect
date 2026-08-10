@@ -1,0 +1,40 @@
+{
+  "id": "eval-03-um-prior-auth",
+  "mode": "New Feature",
+  "skill": "healthcloud-delivery-architect",
+  "description": "Utilization Reviewer triages an inbound prior-authorization request and issues a determination. Payer UM scenario, standard Health Cloud CareRequest / CareRequestReview objects.",
+  "prompt": "Architect HC Story: Utilization Reviewers need to triage inbound prior-authorization requests. Requests should auto-route by service line + patient's health plan, start an SLA clock (72 hrs standard / 24 hrs urgent), let the reviewer set determination (Approved / Denied / Pended / Escalated to Medical Director), reference ClinicalGuideline records for medical necessity, and notify the requesting provider via letter on Deny or Pend.",
+  "context": {
+    "files_present": [],
+    "prior_stories": []
+  },
+  "rubric": {
+    "hard_blockers": [
+      "Persona is 'Utilization Reviewer' or 'UM Nurse' — NOT 'user', NOT 'Patient', NOT 'Provider'",
+      "Story uses standard HC objects: CareRequest, CareRequestReview, CareRequestItem, ClinicalGuideline",
+      "Pattern D block for the determination outcomes (Approved / Denied / Pended / Escalated) — NOT crammed into a single Pattern A Then",
+      "Pattern E block for the Approved branch (CareRequestReview create + CareRequest update + CareRequestItem update + Task create for provider notification)",
+      "SEPARATE Pattern E blocks for Denied and Pended branches (different record recipes)",
+      "PHI audit AC present (RULE 16) — every determination is auditable for 10 years (state UM regs)",
+      "Permission set spec (Pattern C) for HC_UM_Reviewer, HC_MedicalDirector, HC_UM_Nurse",
+      "SLA rules are Pattern D (pause on Pended, resume on info-receipt)",
+      "Build-technology decision in header — mostly declarative + Apex for the clinical-rule evaluation (ClinicalGuideline lookup + rule execution)",
+      "Escalation to Medical Director is Pattern A with a clear routing rule",
+      "Estimated Effort table"
+    ],
+    "quality_checks": [
+      "Auto-assignment by (service line × health plan) implemented as Record-Triggered Flow reading UserTerritory or a review-assignment matrix",
+      "Standard Path on CareRequest (Received → Under Review → Determined → Notified → Closed)",
+      "Provider notification letter uses OOTB Approved Content / native email — no custom letter engine",
+      "Clarification Questions table calls out: (a) X12 278 integration source, (b) NCQA/URAC turnaround compliance reports, (c) appeals downstream story",
+      "No OmniScript in the primary reviewer path (Screen Flow + record page + Dynamic Actions is sufficient)"
+    ]
+  },
+  "red_flags_auto_fail": [
+    "Custom object like PriorAuth__c or Authorization__c proposed instead of native CareRequest",
+    "Pattern A AC references ClinicalGuideline record ID or specific field API names",
+    "Missing separate Pattern E blocks for each determination branch",
+    "Missing PHI/audit AC",
+    "OmniScript proposed for the reviewer workflow without a strong justification (offline capture is not a UM requirement)"
+  ]
+}

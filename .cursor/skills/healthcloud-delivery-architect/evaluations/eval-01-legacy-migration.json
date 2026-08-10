@@ -1,0 +1,40 @@
+{
+  "id": "eval-01-legacy-migration",
+  "mode": "Legacy → HC Migration",
+  "skill": "healthcloud-delivery-architect",
+  "description": "Migrate a legacy Salesforce Care Cloud patient-intake requirement to native Health Cloud objects and personas.",
+  "prompt": "Migrate this legacy Care Cloud requirement to Health Cloud:\n\n'A Care Support Rep creates a Patient__c record when a new caller phones in. They capture the Caller_Name__c, Caller_Phone__c, Reason_for_Call__c (picklist: New Enrollment, Refill, Adherence Question, Device Help, Adverse Event), and Referring_Physician_Name__c. On save, a Case_c is created linked to the Patient__c and routed to the appropriate queue by Reason_for_Call__c. If Reason = Adverse Event, an alert is sent to Pharmacovigilance.'",
+  "context": {
+    "files_present": [
+      "requirements/legacy-carecloud-runbook.md"
+    ],
+    "prior_stories": []
+  },
+  "rubric": {
+    "hard_blockers": [
+      "Persona is a concrete Health Cloud role (e.g. Patient Services Representative), NOT 'Care Support Rep' verbatim from legacy, NOT 'Patient'",
+      "Story uses native HC objects: Account (Person Account, Patient record type) or Individual, and Case — NOT the legacy Patient__c or Case_c custom objects",
+      "Every AC uses Pattern A/B/C/D/E",
+      "Save/Submit AC includes Pattern E block for Account + Case with every field enumerated",
+      "PHI audit AC present (RULE 16) — reason: story writes patient identifying information",
+      "Field-level security / permission set spec present (Pattern C)",
+      "Technical Implementation section present after ACs",
+      "Legacy Source header present in output template — populated with 'Patient__c custom object + Case_c custom object from legacy Care Cloud instance'",
+      "Adverse-event branch is Pattern D (routing rules) with parallel Case creation, NOT a mysterious 'alert to PV'",
+      "Estimated Effort table present"
+    ],
+    "quality_checks": [
+      "Reason_for_Call_c → Case.Category picklist mapping documented in Technical Implementation, not in Pattern A ACs",
+      "'Referring Physician' modeled as HealthcareProvider lookup on Case, not a text field",
+      "Build-technology decision states declarative-first (Screen Flow + Record-Triggered Flow), rejects OmniScript as overkill",
+      "Clarification Questions table calls out data-migration scope (existing Patient__c records)"
+    ]
+  },
+  "red_flags_auto_fail": [
+    "Story preserves 'Care Support Rep' as the persona",
+    "Story preserves 'Patient__c' or 'Case_c' in the story body (should only appear in the Legacy Source header + Technical Implementation as a mapping note)",
+    "Missing Pattern E on save",
+    "Missing PHI audit AC",
+    "'As a Patient' persona for what is clearly an internal Care Cloud replacement"
+  ]
+}
