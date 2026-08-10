@@ -96,7 +96,7 @@ Map story sections to GUS fields:
 If the Salesforce Docs MCP is connected (`salesforce-docs:salesforce_docs_search`
 / `salesforce-docs:salesforce_docs_fetch`), use it to verify any **standard**
 Salesforce / Health Cloud object, field, feature, or API fact the story
-relies on (Account/Person Account, Visit, Product Item, Production Batch, Sample
+relies on (Account/Person Account/Patient record type, Case, CarePlan, CareRequest, HealthcareProvider
 Transaction, Action Launcher, Territory) and cite the returned source URL. This
 is the **primary** verification path for standard Health Cloud facts in a PNM workspace
 where the Health Cloud package may not be deployed. Custom `HC_*` components are still
@@ -176,7 +176,7 @@ A prototype produced by this skill MUST:
 4. **Match the story's Pattern E field spec (RULE 15)** — forms that create or
    update records must show every field listed in the Pattern E table, using
    the same labels/values, with the record's target object annotated
-   (e.g., "creates `HealthcareVisit` + `VisitedParty` (Pattern E §1–§2)").
+   (e.g., "creates `Case` + `ContactEncounter` (Pattern E §1–§2)").
 5. **Be a single self-contained `.html` file** — inline CSS + inline SVG icon
    sprite, no external fonts/JS/CDN dependencies. Portable so the PO can
    email it or open it from their desktop.
@@ -239,7 +239,7 @@ Use the primer's `.lsc-badge` vocabulary (§8) on every interactive element:
 | `LWC`    | Lightning Web Component (custom code) |
 | `OS`     | OmniScript step |
 | `Apex`   | Apex trigger, invocable, controller |
-| `Ext`    | External integration — MuleSoft · Concur · Data Cloud · e-signature |
+| `Ext`    | External integration — MuleSoft · EHR (HL7 v2 / FHIR R4) · Data Cloud · telephony (Service Cloud Voice) |
 
 Every badge carries a one-line caption explaining the "why" (e.g.
 `<span class="lsc-badge flow">Flow · licence check</span>`).
@@ -258,7 +258,7 @@ requirements/<StoryName>_Prototype.html
 ### When NOT to use
 
 - **Bug-fix stories** where the UI does not change — skip the prototype.
-- **Pure backend / integration stories** (e.g. a MuleSoft Concur sync change) —
+- **Pure backend / integration stories** (e.g. a MuleSoft eligibility 270/271 sync change) —
   a sequence diagram is a better artifact; offer 6.2 instead.
 - **Stories that violate the AC-format or persona hard blockers** — fix the
   story before producing a prototype. A grounded prototype cannot rescue an

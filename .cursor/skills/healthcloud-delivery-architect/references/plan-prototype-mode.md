@@ -52,7 +52,7 @@ for now with stories to follow?"*
 | STEP | Behavior in this mode |
 |------|----------------------|
 | **0** | Detect this mode; announce it and confirm ("**Plan + Prototype mode — no stories will be written yet. OK?**"). |
-| **1** | Full sub-domain selection (Commercial / Medical / Market Access / Cross-domain). Same as the story-first modes. |
+| **1** | Full sub-domain selection (Care Management / Patient Services / Utilization Management / Provider Network Ops / Member 360 / Home Health & RPM / Cross-domain). Same as the story-first modes. |
 | **2** | Ask **Phase 1 + Phase 2** clarifying questions only (context + business requirements). **Skip Phase 3–4** — they're calibrated for AC-level detail this mode doesn't produce. Cap at 6 questions. |
 | **3** | **Full component verification.** Custom via `code-review-graph`; standard Health Cloud via `salesforce-docs`. Cannot ground a prototype without this. |
 | **4** | **Skip** story generation. Produce the **Solution Plan** artifact (template below) instead. |
@@ -98,10 +98,9 @@ Companion prototype: `requirements/<Capability>_Prototype.html`
 ```
 # Solution Plan — <Capability name>
 
-**Sub-domain:** Commercial | Medical | Market Access | Cross-domain
-**Primary persona:** <concrete Health Cloud role — e.g. Care Coordinator, Care Manager, Utilization Reviewer,
-Market Access Analyst, Event Organizer>
-**Related HCP/HCO/KOL/DOL subject(s):** <who the work is about (not the login persona)>
+**Sub-domain:** Care Management | Patient Services | Utilization Management | Provider Network Ops | Member 360 | Home Health & RPM | Cross-domain
+**Primary persona:** <concrete Health Cloud role — e.g. Care Coordinator, Care Manager, Nurse Case Manager, Patient Services Representative, Utilization Reviewer, Network Manager, RPM Nurse>
+**Related Patient / Caregiver / HealthcareProvider / HealthcareFacility subject(s):** <who the work is about (not the login persona)>
 **Priority:** P0 | P1 | P2
 **Build Technology (decision):** <one-line summary — e.g. "OOTB Lightning
 record page + Dynamic Actions + one Screen Flow + one small LWC">
@@ -125,11 +124,11 @@ which outcome. Business language. No API names.>
 
 | # | Component | Type | Change | Effort | Why chosen |
 |---|-----------|------|--------|--------|------------|
-| 1 | <Standard `HealthcareVisit` record page> | OOTB | Config (Dynamic Actions) | S | Standard object supports the flow with no code |
-| 2 | <e-signature widget> | LWC | New | M | No OOTB e-signature; small custom component |
+| 1 | <Standard `Case` (Patient Services record type) record page> | OOTB | Config (Dynamic Actions) | S | Standard object supports the flow with no code |
+| 2 | <Patient timeline LWC> | LWC | New | M | Custom collaboration/timeline component beyond page layout |
 | 3 | <"Log Patient Call" Screen Flow> | Flow | New | M | Declarative branching covers the validation |
 | 4 | <atomic write transaction> | Apex | New | M | Multi-object write in a single transaction |
-| 5 | <External Data Cloud lot feed> | Ext | Config | S | Existing DC ingestion pattern |
+| 5 | <External EHR feed via FHIR R4> | Ext | Config | S | Existing FHIR ingestion pattern |
 
 **Badges** — one of: `OOTB`, `Config`, `Flow`, `LWC`, `Apex`, `OS`, `FC`, `IP`, `AL`, `Ext`.
 
@@ -146,8 +145,8 @@ which outcome. Business language. No API names.>
 
 | # | Question | Owner |
 |---|----------|-------|
-| 1 | <e.g. "Which e-signature vendor: DocuSign, native SF, custom?"> | Compliance |
-| 2 | <e.g. "Is HCP licence data in Data Cloud today or on-prem?"> | Data Architecture |
+| 1 | <e.g. "Which telephony platform (Service Cloud Voice / Amazon Connect / Genesys)?"> | Contact Center |
+| 2 | <e.g. "Is the EHR patient index in Data Cloud today, on-prem Epic, or Cerner?"> | Data Architecture |
 
 ## What this plan does NOT include (yet)
 

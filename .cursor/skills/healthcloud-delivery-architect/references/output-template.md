@@ -44,7 +44,7 @@ Use this EXACT format. Every section is REQUIRED unless marked optional.
 
 **Persona:** [Concrete Health Cloud business role from the Health Cloud Persona Cheatsheet — e.g. "Care Coordinator" / "Utilization Reviewer" / "Patient Services Representative". NEVER "business user"; never "Patient" for internal features.]
 **Priority:** P[0-2]
-**HC Sub-domain:** [Care Management / Patient Services / Utilization Management / Provider Network Ops / Member 360 / Home Health [Commercial / Medical / Market Access / Cross-domain] RPM / Cross-domain]
+**HC Sub-domain:** [Care Management / Patient Services / Utilization Management / Provider Network Ops / Member 360 / Home Health & RPM / Cross-domain]
 **Build Technology:** [Primary tech — Standard platform (Flow / Dynamic Actions / Action Launcher / Apex / LWC) and/or OmniStudio; if OmniStudio, note runtime: Standard vs managed package]
 **OmniScript / Flow:** [OmniScript or Screen Flow API Name(s) — or "N/A" / "Proposed (greenfield)"]
 **Integration Procedures:** [IP names — or "N/A"]
@@ -134,7 +134,7 @@ If the story changes only a single component, a 3–5 bullet list is sufficient.
 
 | # | Question | Impact | Owner |
 |---|----------|--------|-------|
-| 1 | [Specific question] | [What it affects if answered differently] | [Technical / Commercial Ops / Medical / Compliance / Product] |
+| 1 | [Specific question] | [What it affects if answered differently] | [Technical / Clinical Ops / Privacy (HIPAA) / Compliance / Product / Contact Center] |
 
 ---
 

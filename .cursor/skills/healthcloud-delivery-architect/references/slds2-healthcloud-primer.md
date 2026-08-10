@@ -140,7 +140,7 @@ network access would break the emailable single-file contract from §6.7.
 | % | Role | Hook family | Where in Health Cloud |
 |---|------|-------------|--------------|
 | **85 %** | Surface, background, container | `--slds-g-color-surface-*` / `--slds-g-color-surface-container-*` | Page background, cards, modals, related lists |
-| **5 %** | Accent, primary CTA, selected state | `--slds-g-color-accent-*` / `--slds-g-color-accent-container-*` | "Save", "New Visit", "Log Inquiry", selected tab |
+| **5 %** | Accent, primary CTA, selected state | `--slds-g-color-accent-*` / `--slds-g-color-accent-container-*` | "Save", "Log Patient Call", "Submit for Review", selected tab |
 | **10 %** | Expressive · data viz · brand | palette hooks (not covered here) | Care-plan progress bar chart, adherence score gauge |
 
 ### Pair surface with on-surface
@@ -432,7 +432,7 @@ for the CSS).
 <section role="dialog" aria-modal="true" class="slds-modal slds-fade-in-open">
   <div class="slds-modal__container">
     <header class="slds-modal__header">
-      <h2 class="slds-modal__title slds-text-heading_medium">Sample drop — HCP e-signature</h2>
+      <h2 class="slds-modal__title slds-text-heading_medium">Log Patient Call — capture consent</h2>
     </header>
     <div class="slds-modal__content slds-p-around_medium">
       <!-- content -->
@@ -451,12 +451,12 @@ for the CSS).
 ```html
 <div class="slds-notify slds-notify_alert slds-theme_success" role="alert">
   <span class="slds-assistive-text">Success</span>
-  <h2>Visit saved. Sample transaction recorded (Lot L-2026-088, 4 units).</h2>
+  <h2>Case saved. Auto-routed to Nurse Case Manager. SLA 4 business hours.</h2>
 </div>
 
 <div class="slds-notify slds-notify_alert slds-theme_error" role="alert">
   <span class="slds-assistive-text">Error</span>
-  <h2>Sample drop blocked — HCP licence is not valid in this state.</h2>
+  <h2>Case blocked — Patient consent for outbound email is not on file.</h2>
 </div>
 ```
 
@@ -542,7 +542,7 @@ Give each Health Cloud prototype this small sprite block near the top of `<body>
 
 | Health Cloud noun | Icon id | Category |
 |----------|---------|----------|
-| Visit / Call | `#icon-visit` | standard:visit |
+| Visit (Home Health / RPM) | `#icon-visit` | standard:visit |
 | Sample / drug sample | `#icon-sample` | standard:sample_management |
 | Account · HCP · HCO | `#icon-account` / `#icon-hcp` | standard:account · standard:hcp |
 | Product / drug | `#icon-product` | standard:product |
@@ -706,7 +706,7 @@ component that will implement it, per §6.7 hard-blocker #2.
 | `LWC`    | Lightning Web Component (custom code) | Signature pad, complex data-viz, offline component |
 | `OS`     | OmniScript step | Branching guided intake (Medical Inquiry) |
 | `Apex`   | Apex trigger, invocable, controller | Atomic multi-object writes, callouts |
-| `Ext`    | External integration (MuleSoft · Concur · Data Cloud · e-signature vendor) | Concur expense sync, DAM content pull, Data Cloud feed |
+| `Ext`    | External integration (MuleSoft · EHR (HL7 v2 / FHIR R4) · Data Cloud · Service Cloud Voice) | Eligibility 270/271 sync, EHR patient sync, Data Cloud unified profile |
 
 ### How to apply a badge
 
