@@ -56,7 +56,26 @@ Delivery Architect"), and author the output using its contract.
 - **Never hallucinate component names** — verify custom components via
   `code-review-graph` and standard Health Cloud objects/fields via
   `salesforce-docs` first, and scan `requirements/` for overlapping stories.
+- **Org-brand skinning on prototypes** (RULE 17) — if the workspace or the
+  prompt matches a supported customer brand, load the corresponding brand
+  reference and paste its CSS overlay + terminology into the §6.7 prototype.
+  Announce which detection signal fired. Do NOT apply a brand skin to
+  non-matching orgs. SLDS 2 remains the baseline; brand tokens overlay it.
 - Include the required sections in canonical order and an **Estimated Effort** table.
+
+## Supported customer brand skins (RULE 17)
+
+Auto-detected from the workspace path, `sfdx-project.json`, `.cursor/rules/`
+files, the user prompt keywords, or an explicit *"apply the &lt;X&gt; skin"*
+instruction:
+
+| Brand | Detection triggers | Reference |
+|-------|--------------------|-----------|
+| **Insulet / OmniPod** | Workspace/repo path contains `insulet`, `omnipod`, or `podder`; `sfdx-project.json` mentions Insulet; a file matching `.cursor/rules/insulet*` or `.cursor/rules/omnipod*` exists; prompt mentions `OmniPod`, `Insulet`, `Podder`, `PDM`, `SmartAdjust`, `SmartBolus`, `PodderCentral`; or the user explicitly asks for the Insulet skin | `.cursor/skills/healthcloud-delivery-architect/references/insulet-omnipod-brand.md` |
+
+Additional brands can be added by dropping a new
+`references/&lt;org&gt;-brand.md` file and adding a row above; the skill treats
+all brand refs the same way (CSS overlay + terminology + mandatory footer).
 
 ## If the MCP is available
 

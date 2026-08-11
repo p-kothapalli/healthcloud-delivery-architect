@@ -33,7 +33,7 @@ globs:
   - "force-app/**/flexCards/**"
 ---
 
-# Health Cloud Delivery Architect (v1.0)
+# Health Cloud Delivery Architect (v1.1.0)
 
 > _Sibling of the `lsc-delivery-architect` skill (Life Sciences Cloud vertical).
 > Same STEP 0–6 workflow and hard blockers; the vertical, persona cheatsheet,
@@ -78,6 +78,7 @@ one-level-deep reference files (loaded only when needed):
 - **Complete Health Cloud standard-object catalog (~200+ objects, Summer '26 / API v67.0):** `references/healthcloud-standard-objects-catalog.md`
 - **Build-technology decision guide + component conventions:** `references/healthcloud-components.md`
 - **SLDS 2 design-system primer (for prototypes + LWC):** `references/slds2-healthcloud-primer.md`
+- **Insulet / OmniPod brand skin (auto-applies in Insulet workspaces):** `references/insulet-omnipod-brand.md`
 - **Worked exemplars (Patterns A–E):** `references/story-examples.md`
 - **Post-generation offers (STEP 6):** `references/post-generation-offers.md`
 
@@ -143,6 +144,7 @@ Story Progress:
 14. **EVERY story has a `## Technical Implementation (high-level)` section after the ACs** — a concise table naming components, change type, and a one-line note. Not a re-spec of the ACs.
 15. **ALWAYS spec every created/updated record with Pattern E** — whenever a story's outcome is "records are created or updated" (a Save, Submit, batch run, or trigger write), include a Pattern E *Record & Field Specification* block enumerating **every object and every field with its exact value/formula** (parents before children). Never abbreviate with "etc."
 16. **PHI awareness is non-negotiable.** Health Cloud stories touch Protected Health Information under HIPAA. Any story that displays, logs, exports, or sends PHI must have an AC (Pattern A) covering audit-log write, and a Pattern B/C spec for the field-level security / permission set that gates access. Never invent an exemption. Consent-driven visibility (per [Salesforce Health Cloud consent model](https://help.salesforce.com/s/articleView?id=sf.hc_admin_consent.htm)) applies when the story touches patient-facing outbound communications.
+17. **Detect and apply the customer's brand skin on prototypes.** When the workspace is an Insulet / OmniPod project (path, `sfdx-project.json`, `.cursor/rules/insulet-*`, prompt keywords, or an explicit "apply the Insulet skin" instruction), load `references/insulet-omnipod-brand.md` and paste its CSS override block into every §6.7 prototype after the SLDS primer, use the OmniPod terminology cross-walk (Podder / Pod / PDM / Controller) in UI copy, and include the mandatory Insulet footer (Safety Info + HIPAA + Customer Support). Do NOT apply the Insulet skin to non-Insulet Health Cloud work. The same overlay pattern applies to any future org-brand reference file — SLDS 2 stays the baseline; brand tokens overlay on top. Announce which detection signal fired so the reviewer knows why the skin is engaged.
 
 The persona contract, the five AC patterns (A behavioural, B field/metadata,
 C permission-set, D update-rules, E record & field specification), and worked
@@ -389,6 +391,7 @@ connected (verify first; a server may need auth):
 - An AC says "records are created/updated" but no Pattern E field-spec block enumerates the objects and fields → STOP, add the per-object field tables (RULE 15).
 - About to present a story missing Technical Implementation, Definition of done, or Estimated Effort → STOP, it's incomplete.
 - About to hand a product owner an HTML prototype that does not label the Salesforce build technology behind each screen → STOP, ground the mockup or don't ship it.
+- Prototype is for an Insulet / OmniPod workspace but uses the default SLDS chrome (no grape header, no IBM Plex Sans, no Podder terminology, no Insulet footer) → STOP, engage the brand skin from `references/insulet-omnipod-brand.md` (RULE 17).
 
 ---
 
@@ -403,6 +406,7 @@ connected (verify first; a server may need auth):
 - `references/healthcloud-standard-objects-catalog.md` — Verified catalog of Health Cloud standard objects, grouped by functional domain, with API names + version availability
 - `references/healthcloud-components.md` — Build-technology decision guide, component types (standard platform + OmniStudio), OmniStudio runtime, Data Mapper naming, & naming conventions
 - `references/slds2-healthcloud-primer.md` — SLDS 2 tokens + patient/care UI patterns
+- `references/insulet-omnipod-brand.md` — Insulet / OmniPod brand skin (auto-applies in Insulet workspaces per RULE 17); overlays SLDS 2, does not replace it
 - `references/story-examples.md` — Worked exemplars (Patterns A–E)
 - `references/post-generation-offers.md` — STEP 6 MCP integration detail
 
@@ -449,4 +453,6 @@ Prefer the `salesforce-docs` MCP when connected; otherwise use these:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| **v1.1.0** | 2026-08-11 | **Org-brand skinning framework** — new `RULE 17` and Red Flag entry; new reference `references/insulet-omnipod-brand.md` (Insulet / OmniPod, first supported brand) with auto-detection heuristics, brand tokens extracted from omnipod.com CSS (grape `#743DBC`, sunlight `#FFA700`, coral `#F75E4C`, info `#1AD1DB`, warm neutrals, IBM Plex Sans + Open Sans), OmniPod → Health Cloud terminology cross-walk (Podder→Account/PersonAccount, Pod→Asset, PDM→Asset, Pump alarm→Case, Re-supply→Order), ready-to-paste CSS overlay block, and mandatory legal footer (Safety Info + HIPAA + Customer Support 1-800-591-3455). SLDS 2 stays the baseline; brand overlays on top. Extensible: same overlay pattern applies to any future org-brand reference file. Update to `.cursor/rules/use-healthcloud-delivery-architect.mdc` to include Insulet detection triggers. |
+| **v1.0.1** | 2026-08-10 | **Template scrub** — surfaced during end-to-end sanity test. Fixed LSC template residue in four shared reference files: `plan-prototype-mode.md` (Solution Plan template sub-domain / persona / component examples now Health Cloud-native), `output-template.md` (broken nested markdown on HC Sub-domain line, owner list now HC roles), `post-generation-offers.md` (Pattern E examples, integration channels, backend-story examples all HC), `slds2-healthcloud-primer.md` (worked modals, save/blocked messages, Ext badge examples). No SKILL.md changes. |
 | **v1.0** | 2026-08-10 | **Initial Health Cloud fork of the LSC Delivery Architect (v1.8).** Same STEP 0–6 workflow, five AC patterns (A–E), Plan + Prototype mode, grounded HTML prototype contract (§6.7), and declarative-first build-technology decisioning (RULE 7a). Vertical-specific rewrites: (1) new **Health Cloud sub-domain** taxonomy — Care Management, Patient Services, Utilization Management, Provider Network Ops, Member 360, Home Health/RPM; (2) new **persona cheatsheet** — Care Coordinator, Care Manager, Nurse Case Manager, Patient Services Rep, Utilization Reviewer, Medical Director, Network Manager, RPM Nurse (replaces MSL/KAM/Field Sales Rep); (3) new **object model** — `Account` (Patient / Caregiver / HealthcareProvider), `CarePlan`, `CarePlanTemplate`, `CarePlanGoal`, `CareRequest`, `CareRequestReview`, `HealthcareProvider`, `HealthcareFacility`, `Case` on Patient, `HealthcareIndividualEnrollment`, `PatientCareTeam` (replaces `HealthcareVisit`/`ProductItem`/`Inquiry`/`ExpenseReport`); (4) new **integration** references — HL7 v2 / FHIR R4 / EHR / eligibility (270/271) / claims (837/835) (replaces SAP Concur); (5) new **migration mode** — Legacy → HC (Salesforce Care Cloud legacy, custom Force.com patient-services, third-party CRM) replaces Veeva → LSC; (6) new **RULE 16 — PHI/HIPAA awareness** as a hard blocker (audit ACs + FLS/perm-set spec on every PHI-touching story). Removed: `concur-integration.md`, `veeva-to-lsc-mapping.md`. Reused unchanged (cloud-agnostic): `ac-pattern-library.md` (AC patterns), `output-template.md`, `plan-prototype-mode.md`, `post-generation-offers.md`. Directory: `.cursor/skills/healthcloud-delivery-architect/`. |

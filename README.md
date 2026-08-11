@@ -63,6 +63,37 @@ PO on cost shape. That's the whole point.
 
 ---
 
+## Customer-brand skinning (RULE 17) — new in v1.1.0
+
+When the skill runs inside a customer workspace it recognises, it **auto-applies
+that customer's brand skin** to the §6.7 prototype: colour tokens, typography,
+product terminology, and the customer's mandatory legal footer are overlaid on
+top of the SLDS 2 baseline (never in place of it). The PO sees a mockup that
+looks like it came from *their* brand system on day one.
+
+### Supported brands (v1.1.0)
+
+| Brand | Auto-detected from | Reference |
+|-------|--------------------|-----------|
+| **Insulet / OmniPod** | Workspace path or repo name contains `insulet` / `omnipod` / `podder`; `sfdx-project.json` mentions Insulet; `.cursor/rules/insulet-*` file; prompt mentions `OmniPod`, `Podder`, `PDM`, `SmartAdjust`, `SmartBolus`, `PodderCentral`; or explicit *"apply the Insulet skin"* | [`insulet-omnipod-brand.md`](.cursor/skills/healthcloud-delivery-architect/references/insulet-omnipod-brand.md) |
+
+The Insulet reference carries the OmniPod colour palette extracted from the
+live omnipod.com CSS (grape `#743DBC`, sunlight `#FFA700`, coral `#F75E4C`,
+info-teal `#1AD1DB`, warm neutrals), typography (IBM Plex Sans + Open Sans),
+an OmniPod → Health Cloud terminology cross-walk (Podder → Person Account,
+Pod → Asset, PDM → Asset, Pump alarm → Case, Re-supply → Order), a
+ready-to-paste CSS overlay, and the mandatory legal footer (Safety Info + HIPAA
++ Customer Support 1-800-591-3455).
+
+### Adding a new brand
+
+Drop a `references/<org>-brand.md` file following the same structure as the
+Insulet reference, and add a row to the supported-brands table in the trigger
+rule. The skill treats every brand file identically: CSS overlay + terminology
++ mandatory footer, on top of SLDS 2.
+
+---
+
 ## What it produces (story mode)
 
 Every generated story follows one contract:
@@ -234,6 +265,7 @@ to file search + curated references and clearly marks unverifiable names as
       healthcloud-standard-objects-catalog.md  # Complete HC standard objects catalog
       healthcloud-components.md          # Build-tech decision guide + component conventions
       slds2-healthcloud-primer.md        # SLDS 2 tokens + HC worked example
+      insulet-omnipod-brand.md           # Insulet / OmniPod brand skin (v1.1.0)
       story-examples.md                  # Worked exemplars (Patterns A–E)
     evaluations/                         # Eval scenarios + rubric
   rules/
@@ -257,7 +289,10 @@ vocabulary (patient/care team → this skill; HCP/MSL/sample → LSC skill).
 
 ## Version
 
-Current: **v1.0** — Initial Health Cloud fork of `lsc-delivery-architect` v1.8
-(Aug 2026). See the Version History table in
+Current: **v1.1.0** — Adds `RULE 17` (org-brand skinning) and the first
+supported brand overlay, [Insulet / OmniPod](.cursor/skills/healthcloud-delivery-architect/references/insulet-omnipod-brand.md).
+v1.0.1 (2026-08-10) scrubbed LSC template residue surfaced by the end-to-end
+sanity test. v1.0 (2026-08-10) was the initial Health Cloud fork of
+`lsc-delivery-architect` v1.8. See the Version History table in
 [`SKILL.md`](.cursor/skills/healthcloud-delivery-architect/SKILL.md) for the
 full change log.
