@@ -13,6 +13,10 @@ model, same hard blockers; the vertical, persona cheatsheet, object model, and
 integration mode (HL7 v2 / FHIR R4 / EHR instead of SAP Concur / Veeva CRM)
 are Health-Cloud-specific.
 
+**Walkthrough (GitHub Pages):**
+[p-kothapalli.github.io/healthcloud-delivery-architect](https://p-kothapalli.github.io/healthcloud-delivery-architect/)
+— four tabs: The Challenge · The Transformation · How It Works · The Proof.
+
 ---
 
 ## Prototype-first, story-second
@@ -271,6 +275,7 @@ to file search + curated references and clearly marks unverifiable names as
   rules/
     use-healthcloud-delivery-architect.mdc   # Trigger rule
 README.md
+index.html                  # GitHub Pages walkthrough (Challenge → Proof)
 ```
 
 ---
