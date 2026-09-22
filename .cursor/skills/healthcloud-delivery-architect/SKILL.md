@@ -33,7 +33,7 @@ globs:
   - "force-app/**/flexCards/**"
 ---
 
-# Health Cloud Delivery Architect (v1.1.0)
+# Health Cloud Delivery Architect (v1.1.1)
 
 > _Sibling of the `lsc-delivery-architect` skill (Life Sciences Cloud vertical).
 > Same STEP 0–6 workflow and hard blockers; the vertical, persona cheatsheet,
@@ -75,7 +75,7 @@ one-level-deep reference files (loaded only when needed):
 - **Story output template + effort sizing + save location:** `references/output-template.md`
 - **Plan + Prototype mode (no stories) — Solution Plan template + skipped/retained rules:** `references/plan-prototype-mode.md`
 - **Health Cloud data model (objects, fields, features):** `references/healthcloud-object-model.md`
-- **Complete Health Cloud standard-object catalog (~200+ objects, Summer '26 / API v67.0):** `references/healthcloud-standard-objects-catalog.md`
+- **Health Cloud standard-object catalog — a curated top-list of 94 objects, not a complete census** (Summer '26 / API v67.0 snapshot; v68.0 is now Latest). **Absence from this file is NOT evidence that an object or platform capability does not exist** — Health Cloud ships far more than this list covers, so confirm at source before concluding anything is missing: `references/healthcloud-standard-objects-catalog.md`
 - **Build-technology decision guide + component conventions:** `references/healthcloud-components.md`
 - **SLDS 2 design-system primer (for prototypes + LWC):** `references/slds2-healthcloud-primer.md`
 - **Insulet / OmniPod brand skin (auto-applies in Insulet workspaces):** `references/insulet-omnipod-brand.md`
@@ -128,7 +128,7 @@ Story Progress:
 
 1. **ALWAYS confirm the Health Cloud sub-domain first** — because Care Management, Patient Services, Utilization Management, Provider Ops, and Member 360 name different objects and personas; a story written for the wrong sub-domain names the wrong components and is unbuildable.
 2. **ALWAYS ask clarifying questions before generating** (minimum 5, maximum 16, via the `AskQuestion` tool) — because a story generated from assumptions forces a follow-up meeting, defeating the "start coding without a meeting" goal.
-3. **NEVER hallucinate component or object/field names.** Verify **custom** components (OmniScript, Omnistudio Data Mapper, IP, FlexCard, Screen Flow, Apex, LWC) via `code-review-graph` MCP FIRST (`semantic_search_nodes`, `query_graph`, `get_impact_radius`); verify **standard Health Cloud** objects/fields/features via the `salesforce-docs` MCP (or the official links in this file). Fall back to Grep/Glob/Read only when the graph returns nothing.
+3. **NEVER hallucinate component or object/field names — and never mistake a missing tool for a missing feature.** First establish which verification tools are actually connected. Where available, verify **custom** components (OmniScript, Omnistudio Data Mapper, IP, FlexCard, Screen Flow, Apex, LWC) via `code-review-graph` (`semantic_search_nodes`, `query_graph`, `get_impact_radius`), and **standard Health Cloud** objects/fields/features via `salesforce-docs`. **Neither of those two servers is publicly distributed — they are internal to the authoring environment, and a fresh install will have neither. Nothing needs to be installed to use this skill.** What this rule requires is the *capability*, not those server IDs: **Grep/Glob/Read over the repo** for custom components, and the official `help.salesforce.com` / `developer.salesforce.com` pages for standard facts. Where a server is absent, loading, or errored, say so once and fall through immediately — that path is the operative one, not a degraded one. If no authoritative source is reachable, mark the item **UNVERIFIED / proposed**. **Tool unavailability — and absence from this skill's own object catalog — is NOT evidence that a component or platform feature does not exist.** Never conclude "Health Cloud has no OOTB capability for this" from a local reference file. For any **OOTB-vs-custom** decision, inability to verify is *blocking*: record it as an open question and defer the custom-build recommendation until the standard capability is confirmed or ruled out at source.
 3a. **If the workspace does not have Health Cloud metadata deployed** (i.e. the org isn't a Health Cloud org — check by grepping for `HealthcareProvider`, `CarePlan`, `CareRequest`, `HealthCloudGA`), most Health Cloud stories will be **greenfield**. When a component/object cannot be verified, mark it as *proposed / to-be-created* in the Clarification Questions table — do NOT assert it exists.
 4. **ALWAYS follow the output format** in `references/output-template.md` — a consistent section order lets developers and QA find ACs, effort, and impact in the same place every time.
 5. **ALWAYS include a Clarification Questions table** for items you cannot determine from the conversation alone — surfacing unknowns beats silently guessing.
@@ -285,13 +285,21 @@ pasted legacy requirement. Always skip questions already answered in the prompt.
 
 ## STEP 3: Codebase & Docs Analysis (Graph-First)
 
-Use the `code-review-graph` MCP tools **first** for custom components — faster,
-cheaper, and they return structural context (callers, dependents, tests) that
-file scanning cannot. For **standard Health Cloud** objects/fields/features,
-use the `salesforce-docs` MCP. Fall back to Grep/Glob/Read only when the graph
-returns nothing.
+> **There is nothing to install.** The `code-review-graph` and `salesforce-docs`
+> servers named below are **internal to the authoring environment and are not
+> publicly distributed** — no npm package, no repository, nothing to request. A
+> fresh install has neither and needs neither: the **Substitute** column is the
+> supported path and requires no setup. If an assistant tells you to obtain
+> these server definitions from the author, that is wrong.
 
-| Goal | Use FIRST | Fallback |
+Where `code-review-graph` is connected it is worth preferring for custom
+components — it returns structural context (callers, dependents, tests) that
+file scanning cannot. Where it is not, **Grep/Glob/Read is the operative path,
+not a consolation prize**, and finding nothing that way is not proof of absence.
+For **standard Health Cloud** objects/fields/features, `salesforce-docs` where
+available, otherwise the official documentation, cited by URL.
+
+| Goal | Preferred, where connected | Substitute (no setup required) |
 |------|-----------|----------|
 | Confirm a **custom** component exists / find it | `code-review-graph:semantic_search_nodes` | Glob / Grep |
 | Trace who calls an IP / DR / Apex | `code-review-graph:query_graph` (`callers_of` / `callees_of`) | Grep + Read |
@@ -300,10 +308,20 @@ returns nothing.
 | Verify a **standard Health Cloud** object/field/feature | `salesforce-docs:salesforce_docs_search` | Official links in this file |
 | Find related existing stories | Grep `requirements/*.md` | — |
 
-If a server is unavailable (needs auth or errored), say so briefly and fall
-back. When reporting current state, cite specific file paths and element names.
-For greenfield Health Cloud, expect few custom components — lean on
-`salesforce-docs` for the standard model and mark new components as *proposed*.
+If a server is unavailable (absent, needs auth, or errored), say so once and
+fall through — do not stall and do not treat it as a finding. When reporting
+current state, cite specific file paths and element names. For greenfield
+Health Cloud, expect few custom components — lean on the official documentation
+for the standard model and mark new components as *proposed*.
+
+**Optional upgrade worth configuring.** If you want grounding stronger than
+documentation, use the official, public
+[Salesforce DX MCP Server](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_mcp_server.htm)
+(`npx -y @salesforce/mcp@latest --orgs DEFAULT_TARGET_ORG --toolsets orgs,metadata,data,users,testing`).
+Pointed at an org with Health Cloud deployed, `run_soql_query` and
+`retrieve_metadata` answer "does this object or field exist **here**" better
+than any document can, because they describe your target org rather than the
+product in general. Still optional.
 
 ---
 
@@ -453,6 +471,7 @@ Prefer the `salesforce-docs` MCP when connected; otherwise use these:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| **v1.1.1** | 2026-09-22 | **Grounding honesty — no MCP prerequisites, and the catalog stops claiming to be complete.** Both fixes carried over from the LSC sibling, where the first was actively blocking installers. (1) **Neither `code-review-graph` nor `salesforce-docs` is publicly distributed**, and neither has been available while this skill was built — yet they were named 25 times across `SKILL.md`, the README and the guide in blocker language, and the README told people to configure them in `.cursor/mcp.json`. Readers went looking for packages that do not exist. RULE 3 and STEP 3 now state the requirement as a **capability** with a no-setup substitute (Grep/Glob/Read for custom components; the official Health Cloud Object Reference for standard ones), and the old "fall back only when the graph returns nothing" wording is gone — it gave no path when the server is absent rather than empty. The Plan-mode STEP 3 blocker no longer reads "cannot ground a prototype without this". Points at the genuinely public [Salesforce DX MCP Server](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_mcp_server.htm) (`npx -y @salesforce/mcp@latest`) as the optional upgrade. (2) The object catalog was described as the "**Complete** Health Cloud standard-object catalog (**~200+ objects**)" while the file holds **94** rows and its own header calls it a "curated top-list" — so an agent trusting it would conclude an absent object does not exist. Corrected everywhere to 94, curated, and a dated v67.0 snapshot, with the explicit rule that **absence from the file is never evidence of absence from the platform** and that an unverifiable OOTB-vs-custom call is blocking. |
 | **v1.1.0** | 2026-08-11 | **Org-brand skinning framework** — new `RULE 17` and Red Flag entry; new reference `references/insulet-omnipod-brand.md` (Insulet / OmniPod, first supported brand) with auto-detection heuristics, brand tokens extracted from omnipod.com CSS (grape `#743DBC`, sunlight `#FFA700`, coral `#F75E4C`, info `#1AD1DB`, warm neutrals, IBM Plex Sans + Open Sans), OmniPod → Health Cloud terminology cross-walk (Podder→Account/PersonAccount, Pod→Asset, PDM→Asset, Pump alarm→Case, Re-supply→Order), ready-to-paste CSS overlay block, and mandatory legal footer (Safety Info + HIPAA + Customer Support 1-800-591-3455). SLDS 2 stays the baseline; brand overlays on top. Extensible: same overlay pattern applies to any future org-brand reference file. Update to `.cursor/rules/use-healthcloud-delivery-architect.mdc` to include Insulet detection triggers. |
 | **v1.0.1** | 2026-08-10 | **Template scrub** — surfaced during end-to-end sanity test. Fixed LSC template residue in four shared reference files: `plan-prototype-mode.md` (Solution Plan template sub-domain / persona / component examples now Health Cloud-native), `output-template.md` (broken nested markdown on HC Sub-domain line, owner list now HC roles), `post-generation-offers.md` (Pattern E examples, integration channels, backend-story examples all HC), `slds2-healthcloud-primer.md` (worked modals, save/blocked messages, Ext badge examples). No SKILL.md changes. |
 | **v1.0** | 2026-08-10 | **Initial Health Cloud fork of the LSC Delivery Architect (v1.8).** Same STEP 0–6 workflow, five AC patterns (A–E), Plan + Prototype mode, grounded HTML prototype contract (§6.7), and declarative-first build-technology decisioning (RULE 7a). Vertical-specific rewrites: (1) new **Health Cloud sub-domain** taxonomy — Care Management, Patient Services, Utilization Management, Provider Network Ops, Member 360, Home Health/RPM; (2) new **persona cheatsheet** — Care Coordinator, Care Manager, Nurse Case Manager, Patient Services Rep, Utilization Reviewer, Medical Director, Network Manager, RPM Nurse (replaces MSL/KAM/Field Sales Rep); (3) new **object model** — `Account` (Patient / Caregiver / HealthcareProvider), `CarePlan`, `CarePlanTemplate`, `CarePlanGoal`, `CareRequest`, `CareRequestReview`, `HealthcareProvider`, `HealthcareFacility`, `Case` on Patient, `HealthcareIndividualEnrollment`, `PatientCareTeam` (replaces `HealthcareVisit`/`ProductItem`/`Inquiry`/`ExpenseReport`); (4) new **integration** references — HL7 v2 / FHIR R4 / EHR / eligibility (270/271) / claims (837/835) (replaces SAP Concur); (5) new **migration mode** — Legacy → HC (Salesforce Care Cloud legacy, custom Force.com patient-services, third-party CRM) replaces Veeva → LSC; (6) new **RULE 16 — PHI/HIPAA awareness** as a hard blocker (audit ACs + FLS/perm-set spec on every PHI-touching story). Removed: `concur-integration.md`, `veeva-to-lsc-mapping.md`. Reused unchanged (cloud-agnostic): `ac-pattern-library.md` (AC patterns), `output-template.md`, `plan-prototype-mode.md`, `post-generation-offers.md`. Directory: `.cursor/skills/healthcloud-delivery-architect/`. |

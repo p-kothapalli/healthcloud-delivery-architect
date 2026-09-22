@@ -3,7 +3,8 @@
 > Loaded on demand by `SKILL.md`. Use this reference when writing Health Cloud
 > stories to name the **right** standard object, avoid inventing custom
 > objects, and reason about parent/child relationships. Field-level facts must
-> still be verified via the `salesforce-docs` MCP (RULE 3).
+> still be verified at source — the official Health Cloud Object Reference, or
+> the `salesforce-docs` MCP where it is connected (RULE 3).
 
 ## Contents
 

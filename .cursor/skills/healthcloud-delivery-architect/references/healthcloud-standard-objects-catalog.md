@@ -1,15 +1,22 @@
 # Health Cloud standard-object catalog
 
-> Curated top-list of Health Cloud standard objects, grouped by functional
-> domain. Sourced from the [Health Cloud Object Reference](https://developer.salesforce.com/docs/atlas.en-us.health_cloud_object_reference.meta/health_cloud_object_reference/sforce_api_objects.htm)
-> (Summer '26, API v67.0). Verify field-level detail with the `salesforce-docs`
-> MCP before use (RULE 3).
+> **Curated top-list of 94 Health Cloud standard objects**, grouped by
+> functional domain — **not a complete census.** Health Cloud ships
+> substantially more than this file covers. Sourced from the
+> [Health Cloud Object Reference](https://developer.salesforce.com/docs/atlas.en-us.health_cloud_object_reference.meta/health_cloud_object_reference/sforce_api_objects.htm)
+> as a dated **Summer '26 / API v67.0 snapshot** — v68.0 is now Latest.
+>
+> **Absence from this file is never evidence that an object, field, or platform
+> capability does not exist.** Treat a miss here as "not yet checked", go to the
+> Object Reference linked above, and — for any out-of-the-box-versus-custom
+> decision — raise it as a blocking question rather than resolving it toward a
+> custom build. Verify field-level detail at source before use (RULE 3).
 
 ## How to use
 
 - **Business-term first** — look up the object by what the business calls it (Care Plan, Prior Auth, Referral, Roster).
 - **API name second** — that's what goes into the Technical Implementation section, never into a Pattern-A Given/When/Then line (RULE 13).
-- If you can't find an object here, it may be a **custom** object in the target org — check `code-review-graph` before assuming it exists.
+- If you can't find an object here, **do not conclude it doesn't exist** — this list is a curated subset. Check the [Health Cloud Object Reference](https://developer.salesforce.com/docs/atlas.en-us.health_cloud_object_reference.meta/health_cloud_object_reference/sforce_api_objects.htm) first; if it isn't standard, it may be a **custom** object in the target org, so search the codebase (Grep/Glob, or `code-review-graph` where it happens to be connected).
 - **Since** column reflects the API version the object was **introduced or last significantly updated** in.
 
 ---
@@ -190,4 +197,4 @@ salesforce_docs_search  query="CarePlan object"
 
 - Health Cloud has evolved through multiple runtimes: the **managed-package** era (namespace `HealthCloudGA__`), the **Industries Common Layer** era, and the **native standard objects** era (post-Summer '20). New work should target the native standard objects wherever possible.
 - Some organisations still run legacy managed-package objects (`HealthCloudGA__EhrPatient__c` etc.). When migrating a legacy Health Cloud instance, translate to native equivalents in the story body and keep the managed-pkg name only as a mapping note.
-- For fields not obvious from the object name (e.g., `CareRequest.SubmissionDate` vs `CareRequest.EffectiveStartDate`), always verify via `salesforce-docs` before adding to Pattern E.
+- For fields not obvious from the object name (e.g., `CareRequest.SubmissionDate` vs `CareRequest.EffectiveStartDate`), always verify at source before adding to Pattern E — the Object Reference linked above, or `salesforce-docs` where it is connected. Never infer a field name from the object name.

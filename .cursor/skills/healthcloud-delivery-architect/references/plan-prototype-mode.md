@@ -54,7 +54,7 @@ for now with stories to follow?"*
 | **0** | Detect this mode; announce it and confirm ("**Plan + Prototype mode — no stories will be written yet. OK?**"). |
 | **1** | Full sub-domain selection (Care Management / Patient Services / Utilization Management / Provider Network Ops / Member 360 / Home Health & RPM / Cross-domain). Same as the story-first modes. |
 | **2** | Ask **Phase 1 + Phase 2** clarifying questions only (context + business requirements). **Skip Phase 3–4** — they're calibrated for AC-level detail this mode doesn't produce. Cap at 6 questions. |
-| **3** | **Full component verification.** Custom via `code-review-graph`; standard Health Cloud via `salesforce-docs`. Cannot ground a prototype without this. |
+| **3** | **Full component verification** — every named component checked before it reaches the prototype. Custom components against the codebase (Grep/Glob/Read, or `code-review-graph` where connected); standard Health Cloud against the official documentation (or `salesforce-docs` where connected). **The verification is required; a particular MCP server is not** — neither named server is publicly available, and the substitutes need no setup. What cannot be confirmed is labelled `(proposed)` on the prototype, and an unverifiable out-of-the-box-versus-custom call is raised as a blocking question rather than resolved toward custom. |
 | **4** | **Skip** story generation. Produce the **Solution Plan** artifact (template below) instead. |
 | **5** | Run the review checklist — but only the items marked "retained" in the rules matrix below. |
 | **6** | Offer the grounded HTML prototype (**§6.7 is now first-class, not optional**) and finish with the **Promote to Stories** offer (below). |

@@ -430,7 +430,7 @@
     <div class="ex-block">
       <div class="ex-kicker">The Structure Behind the Standard</div>
       <h2 class="ex-title">What the skill actually contains</h2>
-      <p class="ex-desc">A navigational SKILL.md plus one-level-deep references. The agent loads only what the current mode needs — it does not dump 200+ objects into every prompt.</p>
+      <p class="ex-desc">A navigational SKILL.md plus one-level-deep references. The agent loads only what the current mode needs — it does not dump the whole object catalog into every prompt.</p>
       <div class="tree">
 <pre>.cursor/skills/healthcloud-delivery-architect/
 ├── SKILL.md                                    <span class="muted-line">← STEP 0–6, hard blockers, version history</span>
@@ -438,7 +438,7 @@
 │   ├── plan-prototype-mode.md                  <span class="muted-line">← Solution Plan contract (no stories)</span>
 │   ├── output-template.md                      <span class="muted-line">← Full story template + effort sizing</span>
 │   ├── ac-pattern-library.md                   <span class="muted-line">← Persona + Patterns A–E</span>
-│   ├── <span class="hl">healthcloud-standard-objects-catalog.md</span> <span class="muted-line">← ~200+ HC objects, API v67.0</span>
+│   ├── <span class="hl">healthcloud-standard-objects-catalog.md</span> <span class="muted-line">← 94 HC objects, curated top-list, v67.0 snapshot</span>
 │   ├── healthcloud-object-model.md             <span class="muted-line">← Care Mgmt / Patient Services / UM</span>
 │   ├── healthcloud-components.md               <span class="muted-line">← RULE 7a decision guide + runtime</span>
 │   ├── slds2-healthcloud-primer.md             <span class="muted-line">← SLDS 2 + badge overlay</span>
@@ -484,7 +484,8 @@
           <div class="decision-label">Will not invent</div>
           <ul>
             <li>Custom components are verified against the codebase first.</li>
-            <li>Standard Health Cloud objects and fields are verified against Salesforce docs (~200+ objects, Summer '26 / API v67.0).</li>
+            <li>Standard Health Cloud objects and fields are verified against the official Salesforce documentation. The bundled catalog is a <strong>curated top-list of 94 objects</strong> on a Summer '26 / API v67.0 snapshot, not a complete census — so its silence is never evidence that an object or capability does not exist.</li>
+            <li>A missing verification tool is never read as a finding. "I could not confirm it" does not become "so we will build it" — an out-of-the-box-versus-custom call that cannot be verified is raised as a blocking question instead.</li>
             <li>Unverifiable names are marked <em>proposed</em> — never asserted as existing.</li>
             <li>OmniScript is not the default. Dynamic Actions, Action Launcher, Screen Flow, and Field Sets are checked first.</li>
           </ul>
@@ -530,7 +531,7 @@ cp -R healthcloud-delivery-architect/.cursor /path/to/your-project/
 <span class="muted-line"># Then, in Cursor:</span>
 <span class="hl">"Plan and prototype logging a patient call — no stories yet."</span></pre>
       </div>
-      <p class="footnote">Optional grounding: <code>code-review-graph</code> for custom components, <code>salesforce-docs</code> for standard Health Cloud objects. Without either, the skill still runs — unverifiable names are marked proposed.</p>
+      <p class="footnote"><strong>There is nothing to install — the skill has no MCP prerequisites.</strong> <code>code-review-graph</code> and <code>salesforce-docs</code> are internal to the author's environment and are <strong>not publicly distributed</strong>: no npm package, no repository, nothing to request. Neither has been available while this skill was built, so the defaults are the normal path — Grep/Glob over your repo for custom components, and the official <a href="https://developer.salesforce.com/docs/atlas.en-us.health_cloud_object_reference.meta/health_cloud_object_reference/sforce_api_objects.htm">Health Cloud Object Reference</a> for standard ones, with unverifiable names marked proposed. If you want stronger grounding, configure the official public <a href="https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_mcp_server.htm">Salesforce DX MCP Server</a> (<code>npx -y @salesforce/mcp@latest</code>) against an org with Health Cloud deployed.</p>
     </div>
   </section>
 
@@ -651,7 +652,7 @@ cp -R healthcloud-delivery-architect/.cursor /path/to/your-project/
       <p>Ask it to plan. Ask it to prototype. Ask it for stories when the walkthrough is done. Same skill — three different stopping points.</p>
     </div>
 
-    <p class="closing-line">Skill v1.1 · Health Cloud sibling of the LSC Delivery Architect · <a href="https://github.com/p-kothapalli/healthcloud-delivery-architect" style="color:var(--accent);font-weight:600;text-decoration:none">github.com/p-kothapalli/healthcloud-delivery-architect</a></p>
+    <p class="closing-line">Skill v1.1.1 · Health Cloud sibling of the LSC Delivery Architect · <a href="https://github.com/p-kothapalli/healthcloud-delivery-architect" style="color:var(--accent);font-weight:600;text-decoration:none">github.com/p-kothapalli/healthcloud-delivery-architect</a></p>
   </section>
 
 </main>
