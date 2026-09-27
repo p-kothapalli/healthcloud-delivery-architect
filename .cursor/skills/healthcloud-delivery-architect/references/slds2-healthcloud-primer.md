@@ -662,9 +662,14 @@ the blueprints in §5 — no LWC dependency.
 
 ## 8. Health Cloud build-technology overlay — the badging layer
 
-**This is what makes an Health Cloud prototype different from a stock SLDS 2 mockup.**
-Every interactive element must carry a small badge naming the Salesforce
-component that will implement it, per §6.7 hard-blocker #2.
+**This is what makes a Health Cloud prototype different from a stock SLDS 2 mockup**
+when the requester asked to see how it will be built.
+
+Badges follow `prototypeLabels` (Q-labels):
+
+- `explicit` — every interactive element carries a badge, and the banner is visible.
+- `both` — the same markup, hidden until **Show build labels** is on. The switch starts off.
+- `clean` — do not emit `.lsc-badge`, `.lsc-build-banner`, or the legend. The Solution Plan still lists every component.
 
 ### Ship this on top of the SLDS 2 markup
 
@@ -694,6 +699,22 @@ component that will implement it, per §6.7 hard-blocker #2.
 }
 .lsc-build-banner .lsc-build-title { font-weight: var(--slds-g-font-weight-7); letter-spacing: 0.02em; }
 .lsc-build-banner .lsc-build-rejected { opacity: 0.85; }
+
+/* prototypeLabels: both — badges exist, hidden until the switch is on */
+html:not(.lsc-labels-on) .lsc-badge,
+html:not(.lsc-labels-on) .lsc-build-banner,
+html:not(.lsc-labels-on) .lsc-build-legend { display: none !important; }
+.lsc-label-toggle {
+  font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+  border: 1px solid var(--slds-g-color-border-1); background: var(--slds-g-color-surface-1);
+  color: var(--slds-g-color-on-surface-1); cursor: pointer;
+}
+```
+
+For `both`, put this control in the global header and leave it visible in both states:
+
+```html
+<button type="button" class="lsc-label-toggle" onclick="document.documentElement.classList.toggle('lsc-labels-on')">Show build labels</button>
 ```
 
 ### Badge naming vocabulary (Health Cloud)
@@ -888,8 +909,8 @@ Before saving `<Capability>_Prototype.html`, verify:
 | 5 | Every surface pairs with an on-surface | `background: surface-1` → text uses `on-surface-2` (etc.) |
 | 6 | Every colour hook is numbered | No `--slds-g-color-on-surface` without a trailing `-1` / `-2` / `-3` |
 | 7 | Every icon has assistive text | Each `<svg>` or icon container has a `<span class="slds-assistive-text">` or `aria-label` |
-| 8 | Every interactive element has a Health Cloud badge | Buttons, inputs, cards, action bars carry `.lsc-badge` per §8 |
-| 9 | Build-tech banner present | `.lsc-build-banner` opens the prototype below the global header |
+| 8 | Badges match `prototypeLabels` | `explicit`: every button, input, card, and action bar has `.lsc-badge`. `both`: same markup, and the page loads without `lsc-labels-on`. `clean`: no `.lsc-badge` in the file |
+| 9 | Banner matches `prototypeLabels` | `explicit`: `.lsc-build-banner` is visible. `both`: the banner is in the file and hidden until the switch. `clean`: no banner in the file |
 | 10 | No dark-mode overrides | Prototype is light-mode only; no `prefers-color-scheme` blocks |
 
 ### Score

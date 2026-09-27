@@ -40,7 +40,7 @@ stories once the PO has walked through the mockup and agreed to the shape.
 | # | Artifact | When | Contract |
 |---|----------|------|----------|
 | **1** | **Solution Plan** | *"Plan this feature — no stories yet"* | Build-technology decision (declarative-first per RULE 7a), Component Inventory with badges + effort sizing, open questions. **No** ACs, **no** Pattern E — deliberately lightweight. |
-| **2** | **Grounded HTML prototype** | *"Show me the built feature"* | Single self-contained `.html`, SLDS 2-flavoured, clickable state toggler, **every element badged** with the Salesforce component that will implement it (`OOTB` / `Config` / `Flow` / `LWC` / `OS` / `FC` / `IP` / `AL` / `Apex` / `Ext`), Build-Technology banner at top, component legend at bottom. |
+| **2** | **Grounded HTML prototype** | *"Show me the built feature"* | Single self-contained `.html`, SLDS 2-flavoured, clickable. Build labels (`OOTB` / `Config` / `Flow` / `LWC` / `OS` / `Apex` / `Ext`) follow `prototypeLabels`: **clean** (hidden), **explicit** (on every element), or **both** (clean screen with a switch). The Solution Plan always records the build decision. |
 | **3** | **Implementation-ready user story** | *"Promote this plan to stories"* — or start here | Concrete Health Cloud persona, Given/When/Then ACs in business language, **Pattern E** per-field record spec on every write, **RULE 16 PHI/HIPAA audit AC**, Technical Implementation table, Definition of Done, Estimated Effort. |
 
 Any one artifact, any combination, or all three — driven by the STEP 0 workflow
@@ -53,13 +53,13 @@ mode (`Plan + Prototype`, `New Feature`, `Refactor`, `Epic Breakdown`,
 
 A prototype produced by this skill MUST:
 
-1. **State the Build Technology at the top** — the chosen tech + rationale + rejected alternative (declarative-first per RULE 7a).
-2. **Label every interactive element** with the Salesforce component that will implement it — Lightning record page + Dynamic Actions, Screen Flow screen, LWC, OmniScript step, FlexCard, Action Launcher, Quick Action, related list, Path, etc.
-3. **Distinguish OOTB vs. custom visually** — coloured badges per component type with hover-tips explaining the "why".
+1. **Record the Build Technology** — the chosen tech + rationale + rejected alternative (declarative-first per RULE 7a). On the screen only when labels are on.
+2. **Follow `prototypeLabels`** — asked before the prototype is drawn. `explicit`: a badge on every interactive element. `both`: the same badges, hidden until "Show build labels" is on. `clean`: no badges on the screen. The component inventory is written in every mode.
+3. **Distinguish OOTB vs. custom when labels are on** — coloured badges per component type.
 4. **Match the story's ACs and Pattern E field spec** (once stories exist) — every happy-path AC reachable in the click-through; forms show every field in the Pattern E table.
 5. **Be a single self-contained `.html` file** — inline CSS, no external fonts/JS/CDN dependencies.
 6. **Use SLDS 2-flavoured styling** so the mockup reads as *Salesforce*, not a generic web app.
-7. **Include a Build-Technology legend footer** — component inventory with effort sizes mirroring the Solution Plan / story.
+7. **Include a Build-Technology legend when labels are on** — component inventory with effort sizes mirroring the Solution Plan / story. Omitted on a clean screen.
 8. **Never invent component or field names** — custom components verified against the codebase, standard Health Cloud objects/fields against the official documentation; unverifiable names marked `(proposed)`. *(No MCP server required — see [Grounding](#grounding-there-is-nothing-you-need-to-install).)*
 
 A prototype without the grounding is worse than no prototype — it misleads the
@@ -189,10 +189,17 @@ routes to the right workflow mode via STEP 0.
 
 ### Prototype-first prompts (the new way — no stories yet)
 
-- *"Plan and prototype `<capability>`."*
-- *"Solution plan for `<capability>` — no stories yet."*
-- *"Prototype-only for `<capability>` — we'll do stories after PO sign-off."*
-- *"Just show me what the built feature would look like and what it costs."*
+Invoke the skill, then describe the job. Do not paste a preamble — persona, grounding, and fictional data are already in the skill.
+
+```
+/healthcloud-delivery-architect
+
+Plan and prototype <the job, in one sentence> — no stories yet.
+```
+
+Build labels are a question the skill asks. Add a line only if you already know: `Build labels: clean`, `explicit`, or `both`.
+
+When the walkthrough is right: `Promote this plan to stories.`
 
 **Examples for a med-device patient-services team (Insulet OmniPod pattern):**
 
@@ -335,7 +342,8 @@ vocabulary (patient/care team → this skill; HCP/MSL/sample → LSC skill).
 
 ## Version
 
-Current: **v1.1.0** — Adds `RULE 17` (org-brand skinning) and the first
+Current: **v1.1.2** — Build labels on a prototype are a question (`clean` / `explicit` / `both`), not something the prompt has to specify. v1.1.1 stopped treating a missing verification tool, or absence from the object catalog, as proof a Health Cloud feature does not exist.
+v1.1.0 adds `RULE 17` (org-brand skinning) and the first
 supported brand overlay, [Insulet / OmniPod](.cursor/skills/healthcloud-delivery-architect/references/insulet-omnipod-brand.md).
 v1.0.1 (2026-08-10) scrubbed LSC template residue surfaced by the end-to-end
 sanity test. v1.0 (2026-08-10) was the initial Health Cloud fork of

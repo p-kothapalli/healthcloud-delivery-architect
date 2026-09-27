@@ -136,11 +136,22 @@ generic web mockup.
 
 ```
 "Would you like me to generate a clickable HTML prototype of this story?
-It will label each screen with the Salesforce component that will build it
-(OOTB Lightning record page + Dynamic Actions, Screen Flow, LWC,
-OmniScript + FlexCard) so you can see whether we can ship this with OOTB
-or need LWC/Flow work."
+Build labels on the screen follow the choice already made (clean, explicit,
+or both). The Solution Plan still records whether this ships with standard
+Lightning, a flow, or custom code."
 ```
+
+### Label mode (`prototypeLabels`)
+
+Asked as **Q-labels** before any prototype is drawn. Do not decide it silently.
+
+| Value | What the product owner sees | What still gets written |
+|-------|------------------------------|-------------------------|
+| `clean` | The product. No OOTB / Config / Flow / LWC / Apex / Ext badges, no build-technology banner, no component legend. | Solution Plan component inventory, build decision, and rejected alternative. |
+| `explicit` | A label on every interactive element, plus the banner and the legend. | Same inventory. |
+| `both` | A clean screen, with a **Show build labels** switch that reveals the badges, banner, and legend. The switch starts off. | Same inventory. Badges are in the file, hidden until the switch is on. |
+
+Skip the question when the prompt already says `Build labels: clean`, `explicit`, or `both`. "Hide labels" or "PO view" means `clean`. "Show labels" or "tag every button" means `explicit`.
 
 ### Why this offering exists (Product Owner point of view)
 
@@ -163,13 +174,16 @@ the PO whether this is a **declarative** build, a **light-code** build, or a
 
 A prototype produced by this skill MUST:
 
-1. **State the Build Technology at the top** — using the primer's
-   `.lsc-build-banner` (§8). The banner text is the same value that appeared
-   in the story's `Build Technology` header field (RULE 7a), with a one-line
-   rationale and the rejected alternative.
-2. **Label every interactive element** with the Salesforce component that will
-   implement it, using the primer's **`.lsc-badge`** vocabulary (§8):
+1. **Record the Build Technology** — the same value as the story or plan
+   `Build Technology` header (RULE 7a), with a one-line rationale and the
+   rejected alternative. On screen, the primer's `.lsc-build-banner` (§8)
+   appears only when `prototypeLabels` is `explicit`, or when it is `both`
+   and the switch is on. In `clean` mode the banner is not in the file.
+2. **Label interactive elements according to `prototypeLabels`**, using the
+   primer's **`.lsc-badge`** vocabulary (§8):
    `OOTB` / `Config` / `Flow` / `LWC` / `OS` / `Apex` / `Ext`.
+   `explicit`: every interactive element. `both`: the same markup, hidden
+   until the switch is on. `clean`: no badges in the file.
 3. **Match the story's ACs** — every happy-path AC in the story must be
    reachable in the click-through; the edge-case AC(s) should be linked from a
    secondary state (error banner, empty state, offline state).
@@ -199,10 +213,12 @@ A prototype produced by this skill MUST:
    **Do not** hand-invent SLDS class names. **Do not** ship generic
    Bootstrap/Material chrome. **Do not** import SLDS from a CDN — self-contained
    file only.
-7. **Include a Build-Technology legend** — a footer or sidebar block that
-   enumerates the components used, the effort size for each (S/M/L from the
-   story's Estimated Effort table), and the OmniStudio runtime choice if
-   OmniStudio is in scope.
+7. **Include a Build-Technology legend when labels are on** — a footer or
+   sidebar that enumerates the components used, the effort size for each
+   (S/M/L), and the OmniStudio runtime if OmniStudio is in scope. Same
+   visibility rule as the badges: always in `explicit`, behind the switch
+   in `both`, omitted in `clean`. In `clean`, one footer line is enough:
+   "Build labels are off for this walkthrough."
 8. **Never invent component or field names.** Reuse the exact names verified
    in STEP 3 (custom via `code-review-graph`, standard Health Cloud via
    `salesforce-docs`); mark unverified names as `(proposed)` — same rule as
@@ -214,7 +230,7 @@ A prototype produced by this skill MUST:
 
 ### Structure
 
-A minimum Health Cloud prototype has:
+A minimum Health Cloud prototype has the regions below. The "Salesforce grounding" column is what the Solution Plan records. Badges appear on the HTML only when `prototypeLabels` is `explicit` or `both`.
 
 | Region | Primer recipe | Salesforce grounding |
 |--------|---------------|----------------------|
@@ -229,7 +245,7 @@ A minimum Health Cloud prototype has:
 
 ### Screen-labelling conventions
 
-Use the primer's `.lsc-badge` vocabulary (§8) on every interactive element:
+When `prototypeLabels` is `explicit` or `both`, use the primer's `.lsc-badge` vocabulary (§8) on every interactive element. When it is `clean`, do not emit these badges.
 
 | Badge | Meaning |
 |-------|---------|
@@ -275,7 +291,6 @@ Screen Flow>. Rejected alternative: <e.g. OmniScript — overkill for a
 single-screen action>.
 
 Open the file locally to click through the happy-path and edge-case states.
-Every screen element is badged with the Salesforce component that will
-implement it. Effort inventory is at the bottom of the file — it mirrors
-the Estimated Effort table in the story.
+Build labels: <clean | explicit | both>. In both, the switch starts off.
+The component inventory is in the Solution Plan either way.
 ```

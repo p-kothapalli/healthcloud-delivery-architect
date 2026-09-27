@@ -53,7 +53,7 @@ for now with stories to follow?"*
 |------|----------------------|
 | **0** | Detect this mode; announce it and confirm ("**Plan + Prototype mode — no stories will be written yet. OK?**"). |
 | **1** | Full sub-domain selection (Care Management / Patient Services / Utilization Management / Provider Network Ops / Member 360 / Home Health & RPM / Cross-domain). Same as the story-first modes. |
-| **2** | Ask **Phase 1 + Phase 2** clarifying questions only (context + business requirements). **Skip Phase 3–4** — they're calibrated for AC-level detail this mode doesn't produce. Cap at 6 questions. |
+| **2** | Ask **Phase 1 + Phase 2** clarifying questions only (context + business requirements). **Skip Phase 3–4** — they're calibrated for AC-level detail this mode doesn't produce. Cap at 6 business questions, plus **Q-labels** whenever a prototype will be drawn (`prototypeLabels`: clean / explicit / both). Skip Q-labels if the prompt already set `Build labels`. |
 | **3** | **Full component verification** — every named component checked before it reaches the prototype. Custom components against the codebase (Grep/Glob/Read, or `code-review-graph` where connected); standard Health Cloud against the official documentation (or `salesforce-docs` where connected). **The verification is required; a particular MCP server is not** — neither named server is publicly available, and the substitutes need no setup. What cannot be confirmed is labelled `(proposed)` on the prototype, and an unverifiable out-of-the-box-versus-custom call is raised as a blocking question rather than resolved toward custom. |
 | **4** | **Skip** story generation. Produce the **Solution Plan** artifact (template below) instead. |
 | **5** | Run the review checklist — but only the items marked "retained" in the rules matrix below. |
@@ -82,11 +82,13 @@ for now with stories to follow?"*
 | **RULE 13 — Business-language ACs** | **NOT APPLIED** | No ACs. |
 | **RULE 14 — `## Technical Implementation (high-level)` section** | **NOT APPLIED** | Component inventory replaces it; the two overlap. |
 | **RULE 15 — Pattern E per-field record spec on every write** | **NOT APPLIED** | Pattern E is a story-level contract; not required for a plan. Prototype forms may show representative fields, labelled as *illustrative, to be fully spec'd at story time*. |
-| **§6.7 grounded HTML prototype hard-blockers (all 9)** | **YES — hard blocker** | Every item, including the SLDS 2 + Cosmos primer (`references/slds2-lsc-primer.md`), build-tech banner + per-element component labels. In this mode §6.7 is not optional; a prototype without them is worse than no prototype. |
+| **§6.7 grounded HTML prototype hard-blockers** | **YES — hard blocker** | SLDS 2 primer, single-file, no invented names. **Build labels follow `prototypeLabels`.** `explicit` and `both` require a badge on every interactive element (`both` starts with them hidden). `clean` requires those badges and the build banner to be absent from the HTML. The component inventory in this plan is required in every mode. A prototype that ignores the chosen mode is worse than no prototype. |
 
 **Read this literally:** you may generate a plan without ACs, without a Pattern
 E field spec, and without a Technical Implementation table — but you may
-**never** generate a prototype without the grounding contract.
+**never** generate a prototype that invents component names or ignores
+`prototypeLabels`. The component inventory is the grounding; badges on the
+HTML are only for `explicit` and `both`.
 
 ---
 
@@ -106,6 +108,7 @@ Companion prototype: `requirements/<Capability>_Prototype.html`
 record page + Dynamic Actions + one Screen Flow + one small LWC">
 **Rejected alternative(s):** <e.g. "OmniScript — overkill for a single-screen action">
 **Prototype:** [<Capability>_Prototype.html](./<Capability>_Prototype.html)
+**Prototype labels:** clean | explicit | both
 **Mode:** Plan + Prototype (no stories yet)
 **AI-estimated — validate with team.**
 
@@ -208,7 +211,7 @@ When the user says **"promote to stories"** (or equivalent):
 | Mistake | Fix |
 |---------|-----|
 | Writing Given/When/Then ACs anyway | STOP — RULE 11 is not applied in this mode. If the requester wants ACs, they're in the wrong mode. |
-| Producing a prototype without a Salesforce component label on every element | STOP — §6.7 hard blockers are the whole point of this mode. |
+| Badging every button when the answer was `clean`, or shipping a clean screen when the answer was `explicit` | STOP — follow `prototypeLabels`. The inventory in this plan is where the build decision lives either way. |
 | Skipping the build-technology decision because "we don't know yet" | STOP — say what the leading candidate is and list the rejected alternative. That's the decision the PO wants. |
 | Inventing a component name because it's a plan, not a story | STOP — RULE 3 still applies. Mark unverifiable components as *proposed*. |
 | Producing a full Estimated Effort table with per-component sub-tasks | Not needed here — the Component inventory row's effort column is sufficient. Save the detailed table for story-time. |

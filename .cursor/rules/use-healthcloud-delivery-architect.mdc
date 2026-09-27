@@ -50,9 +50,10 @@ Delivery Architect"), and author the output using its contract.
 - **PHI / HIPAA awareness** (RULE 16) — every story that displays, logs, exports,
   or sends PHI carries an audit AC (Pattern A) and a field-level-security /
   permission-set spec (Pattern C).
-- **Grounded HTML prototype rule (§6.7)** — a PO prototype MUST label every element
-  with its Salesforce component (OOTB / Config / Flow / LWC / OmniScript / Apex /
-  Ext). An unlabelled generic web mockup is not acceptable.
+- **Grounded HTML prototype rule (§6.7)** — the Solution Plan records how each
+  screen is built. On the HTML, Salesforce build labels (OOTB / Config / Flow /
+  LWC / OmniScript / Apex / Ext) follow `prototypeLabels`: clean, explicit, or
+  both. An ungrounded generic web mockup is not acceptable.
 - **Never hallucinate component names** — verify custom components via
   `code-review-graph` and standard Health Cloud objects/fields via
   `salesforce-docs` first, and scan `requirements/` for overlapping stories.

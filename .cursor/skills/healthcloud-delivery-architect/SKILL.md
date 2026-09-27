@@ -33,7 +33,7 @@ globs:
   - "force-app/**/flexCards/**"
 ---
 
-# Health Cloud Delivery Architect (v1.1.1)
+# Health Cloud Delivery Architect (v1.1.2)
 
 > _Sibling of the `lsc-delivery-architect` skill (Life Sciences Cloud vertical).
 > Same STEP 0–6 workflow and hard blockers; the vertical, persona cheatsheet,
@@ -49,9 +49,12 @@ kinds**, on demand and independently:
 
 1. **Solution Plan** (build-technology decision + component inventory + rough
    effort roll-up) — for product-owner refinement before stories exist.
-2. **Grounded HTML prototype** — a clickable single-file mockup where every
-   element is labelled with the Salesforce component that will implement it
-   (OOTB / Config / Flow / LWC / OmniScript / Apex / Ext).
+2. **Grounded HTML prototype** — a clickable single-file mockup. Salesforce
+   build labels (OOTB / Config / Flow / LWC / OmniScript / Apex / Ext) are an
+   attribute, `prototypeLabels`, asked before the file is drawn: **clean**
+   (hidden — product-owner walkthrough), **explicit** (on every element), or
+   **both** (clean screen with a switch). The Solution Plan always records
+   the build decision either way.
 3. **Implementation-ready user story or epic** — concrete Health Cloud
    persona, business-language Given/When/Then ACs, Pattern E per-field record
    specs, Technical Implementation table, effort sizing.
@@ -199,9 +202,9 @@ rough effort roll-up) and the **grounded HTML prototype** from §6.7. The
 story-first hard blockers (Pattern A GWT, Pattern E field spec, Technical
 Implementation table, Definition of Done) do NOT apply in this mode — its
 deliverable is a plan, not a story. The **grounding hard blockers still
-apply**: build-technology decision must be stated, every prototype element
-must be labelled with its Salesforce component, and no component names may be
-invented. At the end, offer to promote the plan into full user stories. Full
+apply**: build-technology decision must be stated (in the Solution Plan
+always; on the prototype only when `prototypeLabels` is `explicit` or
+`both`), and no component names may be invented. At the end, offer to promote the plan into full user stories. Full
 contract, artifact template, and skipped/retained rules in
 `references/plan-prototype-mode.md`.
 
@@ -262,6 +265,7 @@ pasted legacy requirement. Always skip questions already answered in the prompt.
 | Q6 | Regulatory / compliance requirements? (HIPAA, PHI handling, consent, TCPA/CAN-SPAM for outbound, state-level care-mgmt regulations, NCQA/URAC accreditation) | Non-functional requirements |
 | Q7 | Related stories already written? (I can search requirements/) | Cross-reference |
 | Q8 | Which lines of business, patient populations, or coverage plans does this apply to? | Scope boundaries |
+| Q-labels | **Ask whenever a prototype will be produced.** How should the prototype show Salesforce build labels? **Clean** — no OOTB / Config / Flow / LWC tags on the screen (recommended for product owners). **Explicit** — a label on every element (recommended for architect or cost review). **Both** — clean screen with a "Show build labels" switch (recommended when one file will be walked with both audiences). Skip if the prompt already says `Build labels: clean`, `explicit`, or `both` (also: "hide labels" / "PO view" → clean; "show labels" / "tag every button" → explicit). Record the answer as `prototypeLabels`. The Solution Plan's component inventory is written in every mode; only the HTML chrome changes. See §6.7. | Artifact attribute, not a business requirement |
 
 ### Phase 3: Technical Discovery (ask 3–5 by relevance)
 
@@ -377,7 +381,7 @@ connected (verify first; a server may need auth):
 - **6.4 Salesforce Docs verification** (`salesforce-docs:salesforce_docs_search`)
 - **6.5 Knowledge base** (`notebooklm` — Health Cloud Librarian, if configured)
 - **6.6 Story dependency check** (scan `requirements/`)
-- **6.7 Product-owner HTML prototype** — a single-file, clickable HTML mockup of the story, **grounded in a Salesforce build-technology decision** (OOTB Lightning record page + Dynamic Actions / Screen Flow / LWC / OmniScript + FlexCard). Every screen labels the target Salesforce component so a product owner sees "this is what the built feature will look and behave like" — not a generic web mockup. See `references/post-generation-offers.md` §6.7.
+- **6.7 Product-owner HTML prototype** — a single-file, clickable HTML mockup of the story, **grounded in a Salesforce build-technology decision** (OOTB Lightning record page + Dynamic Actions / Screen Flow / LWC / OmniScript + FlexCard). Build labels on the screen follow `prototypeLabels` from Q-labels: clean, explicit, or both. The decision itself always lives in the Solution Plan. See `references/post-generation-offers.md` §6.7.
 
 ---
 
@@ -408,7 +412,9 @@ connected (verify first; a server may need auth):
 - An AC is a prose paragraph instead of three GWT lines → STOP, reformat to Pattern A.
 - An AC says "records are created/updated" but no Pattern E field-spec block enumerates the objects and fields → STOP, add the per-object field tables (RULE 15).
 - About to present a story missing Technical Implementation, Definition of done, or Estimated Effort → STOP, it's incomplete.
-- About to hand a product owner an HTML prototype that does not label the Salesforce build technology behind each screen → STOP, ground the mockup or don't ship it.
+- About to draw a prototype without having asked Q-labels (and the prompt did not already set `Build labels`) → STOP, ask. Clean, explicit, and both are all valid; silent badges are not.
+- `prototypeLabels: explicit` or `both`, and an interactive element has no Salesforce build label → STOP, label it. For `both`, labels start hidden behind the switch.
+- `prototypeLabels: clean`, and the HTML still shows OOTB / Config / Flow badges or the build banner → STOP, remove them from the screen. Keep the component inventory in the Solution Plan.
 - Prototype is for an Insulet / OmniPod workspace but uses the default SLDS chrome (no grape header, no IBM Plex Sans, no Podder terminology, no Insulet footer) → STOP, engage the brand skin from `references/insulet-omnipod-brand.md` (RULE 17).
 
 ---
@@ -471,6 +477,7 @@ Prefer the `salesforce-docs` MCP when connected; otherwise use these:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| **v1.1.2** | 2026-09-27 | **Build labels are an attribute, not a prompt.** Product owners do not need OOTB / Config / Flow tags on the screen. Q-labels (`prototypeLabels`: `clean` / `explicit` / `both`) is asked whenever a prototype is in scope, and skipped when the prompt already says `Build labels: …`. The Solution Plan still records the build decision in every mode. §6.7, the Plan + Prototype hard blocker, and the primer self-check follow the chosen mode. Requesters no longer paste a long preamble: the skill already owns persona, grounding, fictional data, and "no stories yet." |
 | **v1.1.1** | 2026-09-22 | **Grounding honesty — no MCP prerequisites, and the catalog stops claiming to be complete.** Both fixes carried over from the LSC sibling, where the first was actively blocking installers. (1) **Neither `code-review-graph` nor `salesforce-docs` is publicly distributed**, and neither has been available while this skill was built — yet they were named 25 times across `SKILL.md`, the README and the guide in blocker language, and the README told people to configure them in `.cursor/mcp.json`. Readers went looking for packages that do not exist. RULE 3 and STEP 3 now state the requirement as a **capability** with a no-setup substitute (Grep/Glob/Read for custom components; the official Health Cloud Object Reference for standard ones), and the old "fall back only when the graph returns nothing" wording is gone — it gave no path when the server is absent rather than empty. The Plan-mode STEP 3 blocker no longer reads "cannot ground a prototype without this". Points at the genuinely public [Salesforce DX MCP Server](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_mcp_server.htm) (`npx -y @salesforce/mcp@latest`) as the optional upgrade. (2) The object catalog was described as the "**Complete** Health Cloud standard-object catalog (**~200+ objects**)" while the file holds **94** rows and its own header calls it a "curated top-list" — so an agent trusting it would conclude an absent object does not exist. Corrected everywhere to 94, curated, and a dated v67.0 snapshot, with the explicit rule that **absence from the file is never evidence of absence from the platform** and that an unverifiable OOTB-vs-custom call is blocking. |
 | **v1.1.0** | 2026-08-11 | **Org-brand skinning framework** — new `RULE 17` and Red Flag entry; new reference `references/insulet-omnipod-brand.md` (Insulet / OmniPod, first supported brand) with auto-detection heuristics, brand tokens extracted from omnipod.com CSS (grape `#743DBC`, sunlight `#FFA700`, coral `#F75E4C`, info `#1AD1DB`, warm neutrals, IBM Plex Sans + Open Sans), OmniPod → Health Cloud terminology cross-walk (Podder→Account/PersonAccount, Pod→Asset, PDM→Asset, Pump alarm→Case, Re-supply→Order), ready-to-paste CSS overlay block, and mandatory legal footer (Safety Info + HIPAA + Customer Support 1-800-591-3455). SLDS 2 stays the baseline; brand overlays on top. Extensible: same overlay pattern applies to any future org-brand reference file. Update to `.cursor/rules/use-healthcloud-delivery-architect.mdc` to include Insulet detection triggers. |
 | **v1.0.1** | 2026-08-10 | **Template scrub** — surfaced during end-to-end sanity test. Fixed LSC template residue in four shared reference files: `plan-prototype-mode.md` (Solution Plan template sub-domain / persona / component examples now Health Cloud-native), `output-template.md` (broken nested markdown on HC Sub-domain line, owner list now HC roles), `post-generation-offers.md` (Pattern E examples, integration channels, backend-story examples all HC), `slds2-healthcloud-primer.md` (worked modals, save/blocked messages, Ext badge examples). No SKILL.md changes. |
